@@ -1,0 +1,8 @@
+{
+  "name": "Perf-Appraisal-Server",
+  "version": "1.0.0",
+  "description": "Perf-Appraisal-Server",
+  "main": "app.js",
+  "author": "cdswyda <cdswyda@gmail.com>",
+  "license": "MIT"
+}
