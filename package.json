@@ -4,5 +4,9 @@
   "description": "Perf-Appraisal-Server",
   "main": "app.js",
   "author": "cdswyda <cdswyda@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^3.0.0",
+    "mongoose": "^5.2.6"
+  }
 }
