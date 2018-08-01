@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser')
 const session = require('express-session')
 
 const app = express()
+// Note Since version 1.5.0, the cookie-parser middleware no longer needs to be used for this module to work. This module now directly reads and writes cookies on req/res. Using cookie-parser may result in issues if the secret is not the same between this module and cookie-parser.
 // app.use(cookieParser())
 app.use(session({
     secret: 'keyboard cat',
@@ -17,11 +18,6 @@ app.use(session({
         secure: false,
     }
 }))
-// app.use(session({
-//     secret: 'keyboard cat',
-//     resave: false,
-//     saveUninitialized: true
-// }))
 
 app.use(function (req, res, next) {
     // count the views
