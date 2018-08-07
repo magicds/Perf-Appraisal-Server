@@ -51,7 +51,7 @@ module.exports = {
                 if (aimUser) {
                     aimUser.comparePwd(pwd, aimUser.pwd).then(isMatched => {
                         if (isMatched) {
-                            resolve()
+                            resolve(aimUser)
                         } else {
                             // 密码不匹配
                         }

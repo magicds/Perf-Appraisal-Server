@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const bcrypt = require('bcrypt')
 
+mongoose.Promise = global.Promise
+
 const SALT_WORK_FACTOR = 10
 
 const userSchema = new Schema({
@@ -35,12 +37,14 @@ const userSchema = new Schema({
         }
     }
 })
-
+/**
+ * 比较密码是否匹配
+ * @param {String} pwd 用户提交的密码，经过 base64 编码的
+ * @returns {Promise<Boolean>} 密码是否匹配
+ */
 userSchema.methods.comparePwd = function (pwd) {
-    // return new Promise((resolve,reject) => {
-
-    // })
-    return bcrypt.compare(pwd, this.pwd);
+    pwd = new Buffer(pwd, 'base64').toString()
+    return bcrypt.compare(pwd, this.pwd)
 }
 
 // userSchema.statics.find = function (condition, sort) {
