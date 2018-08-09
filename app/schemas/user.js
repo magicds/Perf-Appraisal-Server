@@ -17,9 +17,16 @@ const userSchema = new Schema({
     },
     pwd: String,
     role: {
-        type: String,
-        enum: ['unverified', 'normal', 'admin'],
-        default: 'unverified'
+        // type: String,
+        // enum: ['unverified', 'normal', 'admin'],
+        // default: 'unverified'
+        // 枚举值不利于做权限判断，改成以数字表示 越大权限越高 也方便后期扩展
+        // 0 unverified 已经注册、未验证
+        // 1 normal 已经验证通过的普通用户
+        // 100 admin 管理员
+        // 1000 superAdmin 超级管理员
+        type: Number,
+        default: 0
     },
     type: {
         type: String,
