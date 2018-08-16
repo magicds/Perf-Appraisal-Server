@@ -1,41 +1,53 @@
 const mongoose = require('mongoose')
-const User = mongoose.model('User')
+const User = mongoose.model('User', require('../schemas/user'))
 
 module.exports = {
-    signup(ctx) {
+    async signup(ctx) {
         const {
             name,
             email,
             pwd
         } = ctx.request.body;
-        return new Promise((resolve, reject) => {
+        try {
+
             // 先验证是否存在
-            User.findOne({
-                '$or': {
-                    name,
+            const aimUser = await User.findOne({
+                '$or': [{
+                    name
+                }, {
                     email
-                }
-            }).then((res) => {
-                if (res) {
-                    // 已经存在
-                    reject()
-                } else {
-                    // 不存在
-                    const user = new User({
-                        name,
-                        email,
-                        pwd
-                    })
-                    user.save(_u => {
-                        resolve(u);
-                    }).then().catch(err => {
-                        reject(err)
-                    })
-                }
+                }]
+            });
+            if (aimUser) {
+                // 已经存在
+                return ctx.response.body = {
+                    code: '200',
+                    data: null,
+                    msg: ' 用户已经存在！'
+                };
+            }
+            // 不存在
+            const user = new User({
+                name,
+                email,
+                pwd
             })
-        })
+            await user.save();
+            return ctx.response.body = {
+                code: '200',
+                data: '注册成功'
+            };
+        } catch (error) {
+            console.log(err);
+            return ctx.response.body = {
+                code: '500',
+                mesg: error.message
+            };
+        }
+
+
     },
-    signin(ctx) {
+    async signin(ctx) {
         const {
             name,
             email,
@@ -51,6 +63,7 @@ module.exports = {
                 if (aimUser) {
                     aimUser.comparePwd(pwd, aimUser.pwd).then(isMatched => {
                         if (isMatched) {
+                            console.log('login success!');
                             resolve(aimUser)
                         } else {
                             // 密码不匹配
