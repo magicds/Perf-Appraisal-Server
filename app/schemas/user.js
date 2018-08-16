@@ -2,6 +2,17 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const bcrypt = require('bcrypt')
 
+/**
+ * 如果是base64编码则解码
+ * @param {String} str string
+ */
+function decodeBase64(str) {
+    if (/^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$/.test(str)) {
+        return new Buffer(str, 'base64').toString();
+    }
+    return str;
+}
+
 mongoose.Promise = global.Promise
 
 const SALT_WORK_FACTOR = 10
@@ -16,6 +27,7 @@ const userSchema = new Schema({
         required: true
     },
     pwd: String,
+    pwdSalt: String,
     role: {
         // type: String,
         // enum: ['unverified', 'normal', 'admin'],
@@ -50,7 +62,7 @@ const userSchema = new Schema({
  * @returns {Promise<Boolean>} 密码是否匹配
  */
 userSchema.methods.comparePwd = function (pwd) {
-    pwd = new Buffer(pwd, 'base64').toString()
+    pwd = decodeBase64(pwd);
     return bcrypt.compare(pwd, this.pwd)
 }
 
@@ -66,6 +78,7 @@ userSchema.pre('save', function (next) {
 
     if (this.isNew) {
         this.meta.createAt = this.meta.updateAt = Date.now()
+        this.pwd = decodeBase64(this.pwd);
     } else {
         this.meta.updateAt = Date.now()
     }
@@ -81,12 +94,22 @@ userSchema.pre('save', function (next) {
     //     next(err)
     // })
     // 自动加盐并hash
-    bcrypt.hash(this.pwd, SALT_WORK_FACTOR).then((hash) => {
-        this.pwd = hash;
-        next()
-    }).catch((err) => {
-        next(err)
-    })
+    // bcrypt.hash(this.pwd, SALT_WORK_FACTOR).then((hash) => {
+    //     this.pwd = hash;
+    //     next()
+    // }).catch((err) => {
+    //     next(err)
+    // })
+    bcrypt.genSalt(SALT_WORK_FACTOR)
+        .then((salt) => {
+            this.pwdSalt = salt;
+            return bcrypt.hash(this.pwd, salt);
+        }).then((hash) => {
+            this.pwd = hash;
+            next();
+        }).catch(err => {
+            next(err);
+        })
 })
 
 

@@ -1,7 +1,7 @@
-exports.resReturn = (data, code = 200, errMsg = '') => {
+module.exports = (data, code = 200, msg = '') => {
     return {
         data,
         code,
-        errMsg
+        msg
     }
 }

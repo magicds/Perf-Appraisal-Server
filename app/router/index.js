@@ -10,6 +10,7 @@ userRouter.post('/signup', userControl.signup);
 userRouter.get('/signup', async (ctx)=>{
   ctx.response.body = 'method error'
 });
+userRouter.post('/login', userControl.login);
 
 const router = new Router({
   prefix: '/perf/api'
