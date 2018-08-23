@@ -13,6 +13,7 @@ module.exports = {
             period,
             user
         } = ctx;
+        const uid = ctx.cookies.get('_pref_uid');
         const token = ctx.cookies.get('_pref_token');
         if (!token) {
             // ctx.response.body = response(null, 405, '用户未登录');

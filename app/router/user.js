@@ -2,7 +2,7 @@ const Router = require('koa-router');
 
 const userRouter = new Router();
 
-const userController = require('../controllers/user');
+const userController = new require('../controllers/user')();
 
 userRouter.post('/signup', userController.signup);
 userRouter.get('/signup', async (ctx)=>{

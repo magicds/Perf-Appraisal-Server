@@ -1,43 +1,17 @@
+const BaseController = require("./base");
 const User = require('../models/user');
 const response = require('../utils/response');
+const {
+    setLoinCookie,
+    clearLoinCookie
+} = require("../utils/util");
 jwt = require('jsonwebtoken');
 
-/**
- * 设置登录成功cookie
- * @param {Object} ctx koa ctx
- * @param {String} uid userid
- * @param {String} pwdSalt userpwd salt
- * @param {Number} expreDay expreDay
- */
-function setLoinCookie(ctx, uid, pwdSalt, expreDay = 7) {
-    let token = jwt.sign({
-        uid: uid
-    }, pwdSalt, {
-        expiresIn: '7 days'
-    });
-    let expireDate = new Date(+new Date() + 86400000 * expreDay);
-    ctx.cookies.set('_pref_token', token, {
-        expires: expireDate,
-        httpOnly: true
-    });
-    ctx.cookies.set('_pref_uid', uid, {
-        expires: expireDate,
-        httpOnly: true
-    });
-}
-
-function clearLoinCookie(ctx) {
-    ctx.cookies.set('_pref_token', token, {
-        expires: null,
-        httpOnly: true
-    });
-    ctx.cookies.set('_pref_uid', uid, {
-        expires: null,
-        httpOnly: true
-    });
-}
-
-module.exports = {
+class UserController extends BaseController {
+    constructor() {
+        super();
+        this.Model = User;
+    }
     async signup(ctx) {
         let {
             name,
@@ -81,7 +55,14 @@ module.exports = {
                 mesg: error.message
             });
         }
-    },
+    }
+    async autoLogin(ctx) {
+        const isLogin = await this.checkLogin(ctx);
+
+        if (isLogin) {
+            setLoinCookie(ctx, this.$uid, this.$user.pwdSalt)
+        }
+    }
     async login(ctx) {
         let {
             name,
@@ -113,9 +94,11 @@ module.exports = {
         } else {
             return ctx.response.body = response(null, 405, 'the username and password not match!');
         }
-    },
+    }
     async logout(ctx) {
         clearLoinCookie(ctx);
         return ctx.response.body = response('logout sussess');
     }
-};
+}
+
+module.exports = UserController
