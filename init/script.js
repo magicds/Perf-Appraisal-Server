@@ -27,12 +27,14 @@ const db = connect().then(() => {
         t.items.forEach((it, j) => {
             const {
                 name,
-                description
+                description,
+                scoreLimit
             } = it;
             subItems.push({
                 pid,
                 name,
                 description,
+                scoreLimit,
                 index: j
             });
         });
@@ -40,8 +42,9 @@ const db = connect().then(() => {
 
     console.log(subItems);
     return ScoreCfgModel.create(subItems).then((subs) => {
+        console.log('初始化评分配置完成');
         console.log(subs);
-    })
+    });
 
 }).catch((err) => {
     console.log('初始化评分配置时出错：' + err.message);
