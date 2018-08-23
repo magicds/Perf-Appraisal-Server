@@ -1,16 +1,8 @@
 const Router = require('koa-router');
+const userRouter = require("./user");
 
-const userRouter = new Router();
 const scoreRouter = new Router();
 const adminRouter = new Router();
-
-const userControl = require('../controllers/user');
-
-userRouter.post('/signup', userControl.signup);
-userRouter.get('/signup', async (ctx)=>{
-  ctx.response.body = 'method error'
-});
-userRouter.post('/login', userControl.login);
 
 const router = new Router({
   prefix: '/perf/api'
