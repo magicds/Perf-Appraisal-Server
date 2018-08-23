@@ -1,3 +1,6 @@
+
+const jwt = require('jsonwebtoken');
+
 /**
  * 设置登录成功cookie
  * @param {Object} ctx koa ctx

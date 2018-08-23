@@ -5,7 +5,6 @@ const {
     setLoinCookie,
     clearLoinCookie
 } = require("../utils/util");
-jwt = require('jsonwebtoken');
 
 class UserController extends BaseController {
     constructor() {
