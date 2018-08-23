@@ -4,9 +4,9 @@ const jwt = require('jsonwebtoken');
 /**
  * 设置登录成功cookie
  * @param {Object} ctx koa ctx
- * @param {String} uid userid
- * @param {String} pwdSalt userpwd salt
- * @param {Number} expreDay expreDay
+ * @param {String} uid userid 
+ * @param {String} pwdSalt userpwd salt 用户的密码盐
+ * @param {Number} expreDay expreDay cookie 有效期 单位：天
  */
 exports.setLoinCookie = function setLoinCookie(ctx, uid, pwdSalt, expreDay = 7) {
     let token = jwt.sign({
