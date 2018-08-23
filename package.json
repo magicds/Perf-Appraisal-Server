@@ -6,7 +6,7 @@
   "author": "cdswyda <cdswyda@gmail.com>",
   "scripts": {
     "start": "pm2 start pm2.config.js",
-    "dev": "pm2 start pm2.config.js dev"
+    "dev": "pm2 start pm2.config.js --node-args \"dev\""
   },
   "license": "MIT",
   "dependencies": {
