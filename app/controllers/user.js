@@ -113,5 +113,9 @@ module.exports = {
         } else {
             return ctx.response.body = response(null, 405, 'the username and password not match!');
         }
+    },
+    async logout(ctx) {
+        clearLoinCookie(ctx);
+        return ctx.response.body = response('logout sussess');
     }
 };

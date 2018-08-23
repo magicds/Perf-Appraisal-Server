@@ -1,3 +1,5 @@
-const Score = require('mongoose').model('Score', require('../schemas/score'))
+const mongoose = require('mongoose');
+const Score = mongoose.model('Score', require('../schemas/score'));
+mongoose.Promise = global.Promise;
 
-module.exports = Score
+module.exports = Score;

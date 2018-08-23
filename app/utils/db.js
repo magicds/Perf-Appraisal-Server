@@ -22,11 +22,7 @@ function connect(callback) {
 
     console.log(connectString);
 
-    let db = mongoose.connect(connectString, options, function (err) {
-        if (err) {
-            console.log(err + ', mongodb Authentication failed', 'error');
-        }
-    });
+    let db = mongoose.connect( connectString, options);
 
     db.then(function () {
         console.log('mongodb load success...');

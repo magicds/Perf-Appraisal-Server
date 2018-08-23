@@ -4,20 +4,21 @@ const Schema = mongoose.Schema
 mongoose.Promise = global.Promise
 // 评分点 schema
 const scoreCfgSchema = new Schema({
-    id: {
-        type: String,
-        default: '',
-        unique: true
+    index: {
+        type: Number,
+        required: true
     },
     pid: {
-        type: String,
-        required: true
+        type: String
     },
     name: {
         type: String,
         required: true
     },
-    description: String,
+    description: {
+        type: String,
+        default: ''
+    },
     scoreLimit: {
         type: Number,
         default: 0
@@ -33,5 +34,13 @@ const scoreCfgSchema = new Schema({
         }
     }
 })
+scoreCfgSchema.pre('save', function (next) {
 
-module.exports = scoreCfgSchema
+    if (this.isNew) {
+        this.meta.createAt = this.meta.updateAt = Date.now();
+    } else {
+        this.meta.updateAt = Date.now();
+    }
+    next();
+})
+module.exports = scoreCfgSchema;
