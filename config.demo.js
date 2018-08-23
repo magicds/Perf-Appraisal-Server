@@ -3,6 +3,7 @@ module.exports = {
     db: {
         servername: '127.0.0.1',
         database: "pref",
+        port: 27017,
         user: "",
         pass: "",
         authSource: ""

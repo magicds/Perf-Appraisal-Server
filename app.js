@@ -16,8 +16,6 @@ app.use(router.routes(), router.allowedMethods());
     // ctx.response.body = '<h1>Hello, koa2!</h1>';
 // });
 
-
-
-// listen at prot 3000
+// listen at prot
 app.listen(config.port);
-console.log('app started at port 3000...');
+console.log(`app started at ${config.port}`);
