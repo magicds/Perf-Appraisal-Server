@@ -109,7 +109,7 @@ const userController = {
             ]
         });
         if (!aimUser) {
-            return ctx.throw(404, 'user is not existed!');
+            return ctx.throw(401, 'user is not existed!');
             // return ctx.response.body = response(null, 404, 'user is not existed');
         }
 

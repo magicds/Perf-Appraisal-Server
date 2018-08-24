@@ -4,11 +4,11 @@ const response = require('../utils/response');
 
 function getDataFromCfg(item) {
     return {
-        id: item.id,
+        id: item._id,
         name: item.name,
         description: item.description,
-        pid: item.pid || null,
-        scoreLimit: item.scoreLimit || null
+        pid: item.pid,
+        scoreLimit: item.scoreLimit
     }
 }
 
