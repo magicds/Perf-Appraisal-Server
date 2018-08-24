@@ -1,7 +1,7 @@
 const ScoreModel = require("../models/score");
 const response = require('../utils/response');
 
-jwt = require('jsonwebtoken');
+
 
 module.exports = {
     async getScore(ctx) {
@@ -17,11 +17,11 @@ module.exports = {
         const token = ctx.cookies.get('_pref_token');
         if (!token) {
             // ctx.response.body = response(null, 405, '用户未登录');
-            ctx.throw(405, '用户未登录');
+            return ctx.throw(405, '用户未登录');
         }
         if (!period) {
             // ctx.response.body = response(null, 405, '必须指定是哪个时期的评分');
-            ctx.throw(400, '必须指定是哪个时期的评分');
+            return ctx.throw(400, '必须指定是哪个时期的评分');
         }
 
         try {

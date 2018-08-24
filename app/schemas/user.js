@@ -65,7 +65,20 @@ userSchema.methods.comparePwd = function (pwd) {
     pwd = decodeBase64(pwd);
     return bcrypt.compare(pwd, this.pwd)
 }
-
+/**
+ * 获取可返回客户端的用户数据
+ * 
+ * @returns {Object}
+ */
+userSchema.methods.getClientData = function(){
+    return {
+        name: this.name,
+        email: this.email,
+        id: this._id,
+        type: this.type,
+        role: this.role
+    }
+};
 // userSchema.statics.find = function (condition, sort) {
 //     return this.find(condition).sort(sort || 'meta.updateAt')
 // }

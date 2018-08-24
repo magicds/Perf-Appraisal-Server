@@ -26,11 +26,11 @@ exports.setLoinCookie = function setLoinCookie(ctx, uid, pwdSalt, expreDay = 7) 
 }
 
 exports.clearLoinCookie = function clearLoinCookie(ctx) {
-    ctx.cookies.set('_pref_token', token, {
+    ctx.cookies.set('_pref_token', '', {
         expires: null,
         httpOnly: true
     });
-    ctx.cookies.set('_pref_uid', uid, {
+    ctx.cookies.set('_pref_uid', '', {
         expires: null,
         httpOnly: true
     });
