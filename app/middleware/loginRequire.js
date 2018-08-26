@@ -5,5 +5,5 @@ module.exports = async (ctx, next) => {
     if (!isLogin) {
         return ctx.throw(401, 'Unauthorized');
     }
-    next();
+    await next();
 }
