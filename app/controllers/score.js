@@ -29,7 +29,28 @@ function getItemsWithScore(cfgs, score) {
         });
     });
 
-    return data;
+    return array2tree(data);
+}
+
+function array2tree(data) {
+    const subs = {};
+    const tops = [];
+    data.forEach(item => {
+        if (!item.pid) {
+            tops.push(item);
+        } else {
+            if (!subs[item.pid]) {
+                subs[item.pid] = [item];
+            } else {
+                subs[item.pid].push(item);
+            }
+        }
+    });
+    tops.forEach(item => {
+        item.items = subs[item.id] || [];
+    });
+
+    return tops;
 }
 
 const scoreController = {
@@ -40,34 +61,28 @@ const scoreController = {
             userId
         } = ctx.request.body;
 
-        try {
-            let userScore = await ScoreModel.findOne({
-                period: period,
-                user: userId
-            }).then(()=>{
-                // todo 到这里的时候 客户端已经直接响应了 需要排查原因
-                console.log(arguments);
-            });
-            console.log(1);
-            // let userScore = false;
-    
-            const hasScore = userScore ? true : false;
-    
-            if (!hasScore) {
-                userScore = await scoreController.getOrCreateScore(ctx);
-                // return ctx.response.body = response(null, 404, '目前还没有评分');
-            }
-    
-            let cfgs = await CfgModel.find();
-    
-            if (!cfgs) {
-                return ctx.throw(500, '因无法获取评分配置，系统暂无法使用');
-            }
-            const scores = getItemsWithScore(cfgs, userScore.score);
-            return ctx.response.body = response(scores);
-        } catch (error) {
-            console.log(error);
+        let userScore = await ScoreModel.findOne({
+            period: period,
+            user: userId
+        }).populate('user');
+
+        const hasScore = userScore ? true : false;
+
+        if (!hasScore) {
+            // userScore = await scoreController.getOrCreateScore(ctx);
+            return ctx.response.body = response(null, 404, '目前还没有评分');
         }
+
+        let cfgs = await CfgModel.find();
+
+        if (!cfgs) {
+            return ctx.throw(500, '因无法获取评分配置，系统暂无法使用');
+        }
+        const scores = getItemsWithScore(cfgs, userScore.score);
+        return ctx.response.body = response({
+            user: userScore.user.getClientData(),
+            score: scores
+        });
     },
     // 获取或初始化用户评分
     async getOrCreateScore(ctx) {
