@@ -13,16 +13,18 @@ const scoreSchema = new Schema({
     period: {
         type: String,
     },
-    score: {
+    scores: {
         type: Object,
         default: {}
         // DEMO
         // {
-        //     scoreCfgId: {
-        //         value: 0,
-        //         note: '投诉，扣10分'
-        //     }
+        //     scoreCfgId1: 5,
+        //     scoreCfgId1: 10,    
         // }
+    },
+    notes:{
+        type: Object,
+        default: {}
     },
     meta: {
         createAt: {

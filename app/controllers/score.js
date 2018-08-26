@@ -3,20 +3,17 @@ const CfgModel = require('../models/schema');
 const response = require('../utils/response');
 
 // 将分数配置和分数拼接在一起
-function getItemsWithScore(cfgs, score) {
+function getItemsWithScore(cfgs, scores, notes) {
     let data = [];
-    const scoreObj = score || {};
+    const scoreObj = scores || {};
+    const noteObj = notes || {};
     let v = 0,
         n = '';
     cfgs.forEach(item => {
-        const scoreItem = scoreObj[item.id];
-        if (scoreItem) {
-            v = scoreItem.value;
-            n = scoreItem.note;
-        } else {
-            v = 0;
-            n = '';
-        }
+        // const scoreItem = scoreObj[item.id];
+        // const noteItem = noteObj[item.id];
+        v = scoreObj[item.id] || 0;
+        n = noteObj[item.id] || '';
 
         data.push({
             id: item._id,
@@ -78,11 +75,11 @@ const scoreController = {
         if (!cfgs) {
             return ctx.throw(500, '因无法获取评分配置，系统暂无法使用');
         }
-        const scores = getItemsWithScore(cfgs, userScore.score);
+        const scores = getItemsWithScore(cfgs, userScore.scores, userScore.notes);
         return ctx.response.body = response({
             id: userScore._id,
             user: userScore.user.getClientData(),
-            score: scores
+            score: scores,
         });
     },
     // 获取或初始化用户评分
@@ -109,30 +106,35 @@ const scoreController = {
         return score;
 
     },
-    async saveScore(ctx) {
+    async saveScoreOrNote(ctx, type) {
         const {
             id,
             scoreId,
-            score
+            score,
+            note
         } = ctx.request.body;
         const userScore = await ScoreModel.findById(id).then(userScore => {
-            if (userScore.score[scoreId]) {
-                userScore.score[scoreId].value = score;
-            } else {
-                userScore.score[scoreId] = {
-                    value: score,
-                    note: ''
-                };
+            if (type == 'score') {
+                userScore.scores[scoreId] = score;
+                userScore.markModified('scores');
+            } else if (type == 'note') {
+                userScore.notes[scoreId] = note;
+                userScore.markModified('notes');
             }
-            userScore.markModified('score');
             return userScore.save();
-        }).then(res=>{
+        }).then(res => {
             console.log(res);
             return res;
         });
 
         return ctx.response.body = response(userScore);
-    }
+    },
+    async saveScore(ctx) {
+        return await scoreController.saveScoreOrNote(ctx, 'score');
+    },
+    async saveNote(ctx) {
+        return await scoreController.saveScoreOrNote(ctx, 'note');
+    },
 }
 
 module.exports = scoreController;
