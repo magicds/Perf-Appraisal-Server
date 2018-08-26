@@ -113,6 +113,16 @@ const scoreController = {
             score,
             note
         } = ctx.request.body;
+        if (type == 'score') {
+            // 分数最大值校验
+            const cfg = await CfgModel.findById(scoreId);
+            if (!cfg) {
+                return ctx.throw(400, '指定评分项目不存在！');
+            }
+            if (cfg.scoreLimit !== 0 && score > cfg.scoreLimit) {
+                return ctx.throw(400, '分数不能超过限制分值');
+            }
+        }
         const userScore = await ScoreModel.findById(id).then(userScore => {
             if (type == 'score') {
                 userScore.scores[scoreId] = score;
