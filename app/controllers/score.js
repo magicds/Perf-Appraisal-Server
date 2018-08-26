@@ -32,6 +32,7 @@ function getItemsWithScore(cfgs, scores, notes) {
 function array2tree(data) {
     const subs = {};
     const tops = [];
+    const topScores = {};
     data.forEach(item => {
         if (!item.pid) {
             tops.push(item);
@@ -41,10 +42,18 @@ function array2tree(data) {
             } else {
                 subs[item.pid].push(item);
             }
+
+            // 计算大项的分值
+            if (topScores[item.pid] === undefined) {
+                topScores[item.pid] = item.score;
+            } else {
+                topScores[item.pid] += item.score;
+            }
         }
     });
     tops.forEach(item => {
         item.items = subs[item.id] || [];
+        item.score = topScores[item.id];
     });
 
     return tops;

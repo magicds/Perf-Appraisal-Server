@@ -10,6 +10,10 @@ module.exports = {
         method: 'post',
         path: '/saveScore',
         action: scoreController.saveScore
+    },{
+        method: 'post',
+        path: '/saveNote',
+        action: scoreController.saveNote
     }],
     anonymity: []
 }
