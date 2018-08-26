@@ -6,6 +6,10 @@ module.exports = {
         method: 'post',
         path: '/getScore',
         action: scoreController.getScore
+    },{
+        method: 'post',
+        path: '/saveScore',
+        action: scoreController.saveScore
     }],
     anonymity: []
 }

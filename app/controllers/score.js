@@ -80,6 +80,7 @@ const scoreController = {
         }
         const scores = getItemsWithScore(cfgs, userScore.score);
         return ctx.response.body = response({
+            id: userScore._id,
             user: userScore.user.getClientData(),
             score: scores
         });
@@ -107,6 +108,30 @@ const scoreController = {
         await score.save();
         return score;
 
+    },
+    async saveScore(ctx) {
+        const {
+            id,
+            scoreId,
+            score
+        } = ctx.request.body;
+        const userScore = await ScoreModel.findById(id).then(userScore => {
+            if (userScore.score[scoreId]) {
+                userScore.score[scoreId].value = score;
+            } else {
+                userScore.score[scoreId] = {
+                    value: score,
+                    note: ''
+                };
+            }
+            userScore.markModified('score');
+            return userScore.save();
+        }).then(res=>{
+            console.log(res);
+            return res;
+        });
+
+        return ctx.response.body = response(userScore);
     }
 }
 
